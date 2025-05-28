@@ -97,7 +97,7 @@ pygame.mixer.init()
 pygame.init()
 
 
-def titulo():
+def mostrar():
     print(cor[2], end='')
     print('-' * 45)
     print(f'{"JOGO DA FORCA":^45}')
@@ -106,16 +106,8 @@ def titulo():
     print('-' * 45)
     print(cor[0])
 
-    mostrar()
-
-    print('\nLetras digitadas: ', end='')
-    for l in l_dig:
-        print(f'{l} ', end='')
-    print('\n')
-
-
-def mostrar():
     forca()
+
     print(f'\n\nDica: {dica}\n\n')
 
     for l in copia:
@@ -129,6 +121,13 @@ def mostrar():
             print('- ', end='')
     print('')
 
+    print('\nLetras digitadas: ', end='')
+    for l in l_dig:
+        if l not in palavra:
+            print(f'{cor[2]}{l}{cor[0]}', end=' ')
+        else:
+            print(f'{cor[1]}{l}{cor[0]}', end=' ')
+    print('\n')
 
 def forca():
     if cont_erro == 0:
@@ -258,10 +257,10 @@ def campeao():
 
 
 pygame.mixer.music.load("sound effects/background.mp3")
-pygame.mixer.music.play(loops=6, start=0.0)
+pygame.mixer.music.play(-1) # -1 música repete indefinidamente
 
 while True:
-    titulo()
+    mostrar()
 
     letra = str(input('Digite uma letra: ')).strip().upper()
 
@@ -279,17 +278,14 @@ while True:
                     cont += 1
 
     if letra not in l_dig and letra != '':
-        if letra not in palavra:
-            l_dig.append(f'{cor[2]}{letra}{cor[0]}')
-        else:
-            l_dig.append(f'{cor[1]}{letra}{cor[0]}')
+        l_dig.append(letra)
 
     system('cls') or None
 
     if cont == len(palavra) or cont_erro == 6:
         break
 
-titulo()
+mostrar()
 sleep(2)
 system('cls') or None
 if cont_erro == 6:
