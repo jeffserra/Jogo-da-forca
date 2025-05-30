@@ -1,4 +1,9 @@
 import pygame
+import unicodedata
+
+def remove_accent(palavra):
+    normalizada = unicodedata.normalize('NFD', palavra)
+    return normalizada.encode('ascii', 'ignore').decode('utf8').upper()
 
 def continuar():
     while True:

@@ -54,20 +54,22 @@ while True:
             sleep(2)
             system('cls') or None
         elif len(entrada) > 1:
-            if entrada != p_secreta and entrada != '': # caso tente acertar a palavra completa
+            if remove_accent(entrada) != remove_accent(p_secreta) and entrada != '': # caso tente acertar a palavra completa
                 cont_erro += 2
             else:
                 cont = len(palavra) #caso acerte a palavra completa
-        elif entrada not in palavra and entrada != '':
+                for p, l in enumerate(palavra):
+                    copia[p] = l
+        elif all(entrada != remove_accent(l) for l in palavra) and entrada != '':
             cont_erro += 1
         else:
             for p, l in enumerate(palavra):
-                if entrada == l:
-                    if entrada not in l_dig:
+                if remove_accent(entrada) == remove_accent(l):
+                    if remove_accent(entrada) not in l_dig:
                         copia[p] = l
                         cont += 1
 
-        if entrada not in l_dig and entrada != '': # adiciona uma entrada digitada em uma lista
+        if remove_accent(entrada) not in l_dig and entrada != '': # adiciona uma entrada digitada em uma lista
             l_dig.append(entrada)
 
         if cont == len(palavra) or cont_erro >= MAX_ERROS: # condição de parada
