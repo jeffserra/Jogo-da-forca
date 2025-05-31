@@ -1,8 +1,41 @@
 import pygame
 import unicodedata
+from utils.interface import enforcado, campeao
+from os import system
+from time import sleep
 
-def remove_accent(palavra):
-    normalizada = unicodedata.normalize('NFD', palavra)
+
+def main(letras_dig, palavra_s, palavra_l, copia_palavra_s, cont_e, cont_l):
+    entrada = str(input('Digite uma letra ou a palavra completa(+2 erros): ')).strip().upper()
+
+    if entrada in letras_dig:
+        print('\nVocê já digitou essa letra')
+        sleep(2)
+        system('cls') or None
+    elif len(entrada) > 1:
+        if remove_accent(entrada) != remove_accent(palavra_s) and entrada != '': # caso tente acertar a palavra completa
+            cont_e += 2
+        else:
+            cont_l = len(palavra_l) #caso acerte a palavra completa
+            for p, l in enumerate(palavra_l):
+                copia_palavra_s[p] = l
+    elif all(remove_accent(entrada) != remove_accent(l) for l in palavra_l) and entrada != '':
+        cont_e += 1
+    else:
+        for p, l in enumerate(palavra_l):
+            if remove_accent(entrada) == remove_accent(l):
+                if remove_accent(entrada) not in letras_dig:
+                    copia_palavra_s[p] = l
+                    cont_l += 1
+
+    if remove_accent(entrada) not in letras_dig and entrada != '': # adiciona uma entrada digitada em uma lista
+        letras_dig.append(remove_accent(entrada))
+
+    return cont_e, cont_l
+
+
+def remove_accent(palavra_s):
+    normalizada = unicodedata.normalize('NFD', palavra_s)
     return normalizada.encode('ascii', 'ignore').decode('utf8').upper()
 
 def continuar():
@@ -32,3 +65,21 @@ def victory_music(caminho):
     pygame.mixer.music.load(caminho)
     pygame.mixer.music.play()
 
+
+def end(cont_e, palavra_s, musica_perdeu, musica_ganhou ):
+    if cont_e >= 6:
+        enforcado(palavra_s)
+        defeat_music(musica_perdeu) # toca música de perdedor
+    else:
+        campeao()
+        victory_music(musica_ganhou) # toca música de vitória
+
+def verification(cont_l, palavra_l, cont_e, MAX_E, vit, der):
+    if cont_l == len(palavra_l) or cont_e >= MAX_E: # condição de parada
+        if cont_l >= len(palavra_l): # acertou a palavra 
+            vit += 1
+        else:
+            der += 1 # errou a palavra
+        return True, vit, der
+    return False, vit, der  # <- retorno padrão caso o jogo ainda não tenha terminado
+            

@@ -26,17 +26,17 @@ vitorias = derrotas = 0
 while True:
     # inicializa as variáveis
     dica = choice(chaves)
-    p_secreta =choice(dic[dica]).upper()
-    cont = 0
+    p_secreta = choice(dic[dica]).upper()
+    cont_letra = 0
     cont_erro = 0
-    palavra = list()
+    palavra_lista = list()
     copia = []
     l_dig = list()
 
     for l in p_secreta:
-        palavra.append(l)
+        palavra_lista.append(l)
         if l == ' ':
-            cont += 1
+            cont_letra += 1
         copia.append(' ')
 
     # toca música de fundo
@@ -45,51 +45,21 @@ while True:
     while True:
         system('cls') or None
 
-        mostrar(copia, palavra, l_dig, dica, cont_erro)
+        mostrar(cont_erro, dica, copia, palavra_lista, l_dig, p_secreta)
 
-        entrada = str(input('Digite uma letra ou a palavra completa(+2 erros): ')).strip().upper()
+        cont_erro, cont_letra = main(l_dig, p_secreta, palavra_lista, copia, cont_erro, cont_letra)
 
-        if entrada in l_dig:
-            print('\nVocê já digitou essa letra')
-            sleep(2)
-            system('cls') or None
-        elif len(entrada) > 1:
-            if remove_accent(entrada) != remove_accent(p_secreta) and entrada != '': # caso tente acertar a palavra completa
-                cont_erro += 2
-            else:
-                cont = len(palavra) #caso acerte a palavra completa
-                for p, l in enumerate(palavra):
-                    copia[p] = l
-        elif all(entrada != remove_accent(l) for l in palavra) and entrada != '':
-            cont_erro += 1
-        else:
-            for p, l in enumerate(palavra):
-                if remove_accent(entrada) == remove_accent(l):
-                    if remove_accent(entrada) not in l_dig:
-                        copia[p] = l
-                        cont += 1
+        interromper, vitorias, derrotas = verification(cont_letra, palavra_lista, cont_erro, MAX_ERROS, vitorias, derrotas)
 
-        if remove_accent(entrada) not in l_dig and entrada != '': # adiciona uma entrada digitada em uma lista
-            l_dig.append(entrada)
-
-        if cont == len(palavra) or cont_erro >= MAX_ERROS: # condição de parada
-            if cont >= len(palavra): # acertou a palavra 
-                vitorias += 1
-            else:
-                derrotas += 1 # errrou a palavra
+        if interromper:
             break
-
-    mostrar(copia, palavra, l_dig, dica, cont_erro)
+    
+    system('cls') or None
+    mostrar(cont_erro, dica, copia, palavra_lista, l_dig, p_secreta)
     sleep(2)
     system('cls') or None
 
-    if cont_erro == 6:
-        enforcado(p_secreta) 
-        defeat_music(DEFEAT_SOUND) # toca música de perdedor
-
-    else:
-        campeao()
-        victory_music(VICTORY_SOUND) # toca música de vitória
+    end(cont_erro, p_secreta, DEFEAT_SOUND, VICTORY_SOUND)
     
     sleep(3)
     if not continuar(): # pergunta se quer continuar

@@ -4,28 +4,28 @@ cor = ('\033[m',  # sem cor
        '\033[1;30;107m',  # branco
        '\033[1;33m')  # amarelo
 
-def cabeçalho(erro):
+def cabeçalho(cont_e):
     print(cor[2], end='')
     print('-' * 45)
     print(f'{"JOGO DA FORCA":^45}')
     print('-' * 45)
-    print(f'ERROS: {erro} ')
+    print(f'ERROS: {cont_e} ')
     print('-' * 45)
     print(cor[0])
     
 
-def mostrar(copia, palavra, l_dig, dica, erro):
-    cabeçalho(erro)
+def mostrar(cont_e, pista, copia_palavra_s, palavra_l, letras_dig, palavra_s):
+    cabeçalho(cont_e)
     
-    forca(erro)
+    forca(cont_e)
 
-    print(f'\n\nDica: {dica}\n\n')
+    print(f'\n\nDica: {pista}\n\n')
 
-    for l in copia:
+    for l in copia_palavra_s:
         print(f'{l} ', end='')
     print('')
 
-    for l in palavra:
+    for l in palavra_l:
         if l == ' ':
             print('  ', end='')
         else:
@@ -33,16 +33,21 @@ def mostrar(copia, palavra, l_dig, dica, erro):
     print('')
 
     print('\nLetras digitadas: ', end='')
-    for l in l_dig:
-        if l not in palavra:
+    for l in letras_dig:
+        if len(l) > 1:
+            if l != palavra_s:
+                print(f'{cor[2]}{l}{cor[0]}', end=' ')
+            else:
+                print(f'{cor[1]}{l}{cor[0]}', end=' ')
+        elif l not in palavra_l:
             print(f'{cor[2]}{l}{cor[0]}', end=' ')
         else:
             print(f'{cor[1]}{l}{cor[0]}', end=' ')
     print('\n')
 
 
-def forca(erro):
-    if erro == 0:
+def forca(cont_e):
+    if cont_e == 0:
         print('   ________')
         print('  |        |')
         print('  |')
@@ -55,7 +60,7 @@ def forca(erro):
         print('  |')
         print('-----')
 
-    elif erro == 1:
+    elif cont_e == 1:
         print('   ________')
         print('  |        |')
         print('  |       ---')
@@ -68,7 +73,7 @@ def forca(erro):
         print('  |')
         print('-----')
 
-    elif erro == 2:
+    elif cont_e == 2:
         print('   ________')
         print('  |        |')
         print('  |       ---')
@@ -80,7 +85,7 @@ def forca(erro):
         print('  |')
         print('  |')
         print('-----')
-    elif erro == 3:
+    elif cont_e == 3:
         print('   ________')
         print('  |        |')
         print('  |       ---')
@@ -92,7 +97,7 @@ def forca(erro):
         print('  |')
         print('  |')
         print('-----')
-    elif erro == 4:
+    elif cont_e == 4:
         print('   ________')
         print('  |        |')
         print('  |       ---')
@@ -104,7 +109,7 @@ def forca(erro):
         print('  |')
         print('  |')
         print('-----')
-    elif erro == 5:
+    elif cont_e == 5:
         print('   ________')
         print('  |        |')
         print('  |       ---')
@@ -130,7 +135,7 @@ def forca(erro):
         print('-----')
 
 
-def enforcado(secreta):
+def enforcado(palavra_s):
     print(cor[2], end='')
     print('\nVOCÊ FOI ENFORCADO !!!\n')
     print('     __________ ')
@@ -143,7 +148,7 @@ def enforcado(secreta):
     print('     | !!!!!! |')
     print('      \\ !!!! /')
     print('       ------')
-    print(f'\nA PALAVRA ERA: {secreta}')
+    print(f'\nA PALAVRA ERA: {palavra_s}')
     print(cor[0])
 
 
