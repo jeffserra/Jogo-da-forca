@@ -1,42 +1,45 @@
 import pygame
-import unicodedata
 from utils.interface import enforcado, campeao
 from os import system
 from time import sleep
+from utils.treat_text import remove_character
 
 
-def main(letras_dig, palavra_s, palavra_l, copia_palavra_s, cont_e, cont_l):
+def main(letras_dig, palavra_s, copia_palavra_s, cont_e, cont_l):
+   
     entrada = str(input('Digite uma letra ou a palavra completa(+2 erros): ')).strip().upper()
 
+    if entrada == '':
+        print('\nEntrada inválida. Por favor, digite algo.')
+        sleep(2)
+        system('cls') or None
+        return cont_e, cont_l
+
     if entrada in letras_dig:
-        print('\nVocê já digitou essa letra')
+        print('\nVocê já digitou essa letra.')
         sleep(2)
         system('cls') or None
     elif len(entrada) > 1:
-        if remove_accent(entrada) != remove_accent(palavra_s) and entrada != '': # caso tente acertar a palavra completa
+        if remove_character(entrada) != remove_character(palavra_s): # caso tente acertar a palavra completa
             cont_e += 2
         else:
-            cont_l = len(palavra_l) #caso acerte a palavra completa
-            for p, l in enumerate(palavra_l):
+            cont_l = len(palavra_s) #caso acerte a palavra completa
+            for p, l in enumerate(palavra_s):
                 copia_palavra_s[p] = l
-    elif all(remove_accent(entrada) != remove_accent(l) for l in palavra_l) and entrada != '':
+    elif all(remove_character(entrada) != remove_character(l) for l in palavra_s):
         cont_e += 1
     else:
-        for p, l in enumerate(palavra_l):
-            if remove_accent(entrada) == remove_accent(l):
-                if remove_accent(entrada) not in letras_dig:
+        for p, l in enumerate(palavra_s):
+            if remove_character(entrada) == remove_character(l):
+                if remove_character(entrada) not in letras_dig:
                     copia_palavra_s[p] = l
                     cont_l += 1
 
-    if remove_accent(entrada) not in letras_dig and entrada != '': # adiciona uma entrada digitada em uma lista
-        letras_dig.append(remove_accent(entrada))
+    if remove_character(entrada) not in letras_dig and entrada != '': # adiciona uma entrada digitada em uma lista
+        letras_dig.append(remove_character(entrada))
 
     return cont_e, cont_l
 
-
-def remove_accent(palavra_s):
-    normalizada = unicodedata.normalize('NFD', palavra_s)
-    return normalizada.encode('ascii', 'ignore').decode('utf8').upper()
 
 def continuar():
     while True:
@@ -74,9 +77,9 @@ def end(cont_e, palavra_s, musica_perdeu, musica_ganhou ):
         campeao()
         victory_music(musica_ganhou) # toca música de vitória
 
-def verification(cont_l, palavra_l, cont_e, MAX_E, vit, der):
-    if cont_l == len(palavra_l) or cont_e >= MAX_E: # condição de parada
-        if cont_l >= len(palavra_l): # acertou a palavra 
+def verification(cont_l, palavra_s, cont_e, MAX_E, vit, der):
+    if cont_l == len(palavra_s) or cont_e >= MAX_E: # condição de parada
+        if cont_l >= len(palavra_s): # acertou a palavra 
             vit += 1
         else:
             der += 1 # errou a palavra

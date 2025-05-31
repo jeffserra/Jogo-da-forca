@@ -1,3 +1,5 @@
+from utils.treat_text import remove_character
+
 cor = ('\033[m',  # sem cor
        '\033[1;32m',  # verde
        '\033[1;31m',  # vermelho
@@ -14,7 +16,7 @@ def cabeçalho(cont_e):
     print(cor[0])
     
 
-def mostrar(cont_e, pista, copia_palavra_s, palavra_l, letras_dig, palavra_s):
+def mostrar(cont_e, pista, copia_palavra_s, palavra_s, letras_dig):
     cabeçalho(cont_e)
     
     forca(cont_e)
@@ -25,8 +27,8 @@ def mostrar(cont_e, pista, copia_palavra_s, palavra_l, letras_dig, palavra_s):
         print(f'{l} ', end='')
     print('')
 
-    for l in palavra_l:
-        if l == ' ':
+    for l in palavra_s:
+        if not l.isalnum() or l == ' ':
             print('  ', end='')
         else:
             print('- ', end='')
@@ -35,11 +37,11 @@ def mostrar(cont_e, pista, copia_palavra_s, palavra_l, letras_dig, palavra_s):
     print('\nLetras digitadas: ', end='')
     for l in letras_dig:
         if len(l) > 1:
-            if l != palavra_s:
+            if remove_character(l) != remove_character(palavra_s):
                 print(f'{cor[2]}{l}{cor[0]}', end=' ')
             else:
                 print(f'{cor[1]}{l}{cor[0]}', end=' ')
-        elif l not in palavra_l:
+        elif l not in palavra_s:
             print(f'{cor[2]}{l}{cor[0]}', end=' ')
         else:
             print(f'{cor[1]}{l}{cor[0]}', end=' ')
