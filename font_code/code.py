@@ -29,15 +29,15 @@ while True:
     p_secreta = choice(dic[dica]).upper()
     cont_letra = 0
     cont_erro = 0
-    palavra_lista = list()
     copia = []
     l_dig = list()
 
     for l in p_secreta:
-        palavra_lista.append(l)
-        if l == ' ':
+        if not l.isalnum():
             cont_letra += 1
-        copia.append(' ')
+            copia.append(l)
+        else:
+            copia.append(' ')
 
     # toca música de fundo
     BG(BACKGROUND_MUSIC, MUSIC_LOOP)
@@ -45,17 +45,17 @@ while True:
     while True:
         system('cls') or None
 
-        mostrar(cont_erro, dica, copia, palavra_lista, l_dig, p_secreta)
+        mostrar(cont_erro, dica, copia, p_secreta, l_dig)
 
-        cont_erro, cont_letra = main(l_dig, p_secreta, palavra_lista, copia, cont_erro, cont_letra)
+        cont_erro, cont_letra = main(l_dig, p_secreta, copia, cont_erro, cont_letra)
 
-        interromper, vitorias, derrotas = verification(cont_letra, palavra_lista, cont_erro, MAX_ERROS, vitorias, derrotas)
+        interromper, vitorias, derrotas = verification(cont_letra, p_secreta, cont_erro, MAX_ERROS, vitorias, derrotas)
 
         if interromper:
             break
     
     system('cls') or None
-    mostrar(cont_erro, dica, copia, palavra_lista, l_dig, p_secreta)
+    mostrar(cont_erro, dica, copia, p_secreta, l_dig)
     sleep(2)
     system('cls') or None
 
